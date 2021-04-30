@@ -32,8 +32,6 @@ const SearchParams = () => {
     }, console.error);
   }, [animal, setBreed]);
 
-  console.log(pets);
-
   return (
     <div className="search-params">
       <h1>{location}</h1>
