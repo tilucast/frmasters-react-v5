@@ -4,14 +4,13 @@ const Carousel = ({ media }) => {
   const [photos, setPhotos] = useState([]);
   const [activePhoto, setActivePhoto] = useState(0);
 
-  let hero = ["https://placecorgi.com/600/600"];
-
   useEffect(() => {
+    let hero = ["https://placecorgi.com/600/600"];
     if (media.length) {
       hero = media.map(({ large }) => large);
     }
     setPhotos(hero);
-  }, []);
+  }, [media]);
 
   const handlePhotoClick = (event) => {
     setActivePhoto(+event.target.dataset.index); // parseInt, or wrap everything with Number()
