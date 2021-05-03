@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import pet from "@frontendmasters/pet";
+import Carousel from "./Carousel";
 
 const Details = (props) => {
   const [animal, setAnimal] = useState({});
@@ -21,10 +22,18 @@ const Details = (props) => {
 
   if (loading) return <h1>Loading ...</h1>;
 
-  const { name, breed, location, description, animal: animalApi } = animal;
+  const {
+    name,
+    breed,
+    location,
+    description,
+    animal: animalApi,
+    media,
+  } = animal;
 
   return (
     <div className="details">
+      <Carousel media={media} />
       <div className="">
         <h1>{name}</h1>
         <h2>{`${animalApi} - ${breed} - ${location}`}</h2>
