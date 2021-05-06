@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 
-const Carousel = ({ media }) => {
-  const [photos, setPhotos] = useState([]);
+interface Media {
+  media: {
+    large: string;
+    full: string;
+    medium: string;
+    small: string;
+  }[];
+}
+
+const Carousel = ({ media }: Media) => {
+  const [photos, setPhotos] = useState<string[]>([]);
   const [activePhoto, setActivePhoto] = useState(0);
 
   useEffect(() => {
@@ -12,8 +21,13 @@ const Carousel = ({ media }) => {
     setPhotos(hero);
   }, [media]);
 
-  const handlePhotoClick = (event) => {
-    setActivePhoto(+event.target.dataset.index); // parseInt, or wrap everything with Number()
+  const handlePhotoClick = (event: MouseEvent<HTMLElement>) => {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    if (event.target.dataset.index) {
+      setActivePhoto(+event.target.dataset.index); // parseInt, or wrap everything with Number()
+    }
   };
 
   return (

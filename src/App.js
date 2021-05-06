@@ -5,7 +5,7 @@ import { Router } from "@reach/router";
 import ThemeContext from "./ThemeContext";
 import Navbar from "./Navbar";
 
-const Details = lazy(() => import("./Details.js"));
+const Details = lazy(() => import("./Details.tsx"));
 
 const App = () => {
   const themeHook = useState("darkblue");
