@@ -1,7 +1,8 @@
 import React from "react";
+import { Animal } from "./Details";
 import { Pet } from "./Pet";
 
-let Results = ({ pets }) => {
+let Results: React.FC<{ pets: Animal[] }> = ({ pets }) => {
   return (
     <div className="search">
       {!pets.length ? (
@@ -11,10 +12,10 @@ let Results = ({ pets }) => {
           <Pet
             key={pet.id}
             name={pet.name}
-            animal={pet.species}
-            breed={pet.breeds.primary}
-            media={pet.photos}
-            location={`${pet.contact.address.city}, ${pet.contact.address.state}`}
+            animal={pet.type}
+            breed={pet.breed}
+            media={pet.media}
+            location={pet.location}
             id={pet.id}
           />
         ))

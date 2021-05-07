@@ -5,10 +5,10 @@ import { Router } from "@reach/router";
 import ThemeContext from "./ThemeContext";
 import Navbar from "./Navbar";
 
-const Details = lazy(() => import("./Details.tsx"));
+const Details = lazy(() => import("./Details"));
 
 const App = () => {
-  const themeHook = useState("darkblue");
+  const themeHook = useState("peru");
 
   return (
     <React.StrictMode>

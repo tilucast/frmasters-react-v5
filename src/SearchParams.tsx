@@ -1,18 +1,26 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  FormEvent,
+  FunctionComponent,
+} from "react";
 import pet, { ANIMALS } from "@frontendmasters/pet";
 import useDropdown from "./useDropdown";
 import Results from "./Results";
 import ThemeContext from "./ThemeContext";
+import { Animal } from "./Details";
+import { RouteComponentProps } from "@reach/router";
 
-const SearchParams = () => {
+const SearchParams: FunctionComponent<RouteComponentProps> = () => {
   const [location, setLocation] = useState("Seattle, WA");
-  const [breeds, setBreeds] = useState([]);
+  const [breeds, setBreeds] = useState<string[]>([]);
   const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
   const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
-  const [pets, setPets] = useState([]);
+  const [pets, setPets] = useState<Animal[]>([]);
   const [theme, setTheme] = useContext(ThemeContext); //theme, and the updater
 
-  const requestPets = async (event) => {
+  const requestPets = async (event: FormEvent) => {
     event.preventDefault();
 
     setTheme("darkcyan");
@@ -22,8 +30,20 @@ const SearchParams = () => {
       breed,
       type: animal,
     });
+    const typedAnimals = animals.map((animal) => {
+      return {
+        id: animal.id,
+        url: animal.url,
+        name: animal.name,
+        location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+        description: animal.description,
+        media: animal.photos,
+        breed: animal.breeds.primary,
+        type: animal.type,
+      };
+    });
 
-    setPets(animals || []);
+    setPets(typedAnimals || []);
   };
 
   useEffect(() => {

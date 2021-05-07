@@ -1,12 +1,10 @@
-import React, { MouseEvent, useEffect, useState } from "react";
+/**@jsx jsx */
+import { css, jsx } from "@emotion/react";
+import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
+import { Photo } from "@frontendmasters/pet";
 
 interface Media {
-  media: {
-    large: string;
-    full: string;
-    medium: string;
-    small: string;
-  }[];
+  media: Photo[];
 }
 
 const Carousel = ({ media }: Media) => {
@@ -30,21 +28,70 @@ const Carousel = ({ media }: Media) => {
     }
   };
 
+  const handlePhotoWithKeyboard = (event: KeyboardEvent) => {
+    if (event.code === "ArrowRight") {
+      setActivePhoto((state) => {
+        if (state + 1 >= photos.length) {
+          return state;
+        } else {
+          return state + 1;
+        }
+      });
+    }
+
+    if (event.code === "ArrowLeft") {
+      setActivePhoto((state) => {
+        if (state - 1 < 0) {
+          return state;
+        } else {
+          return state - 1;
+        }
+      });
+    }
+  };
+
   return (
-    <div className="carousel">
+    <div
+      tabIndex={0}
+      role="button"
+      onKeyDown={handlePhotoWithKeyboard}
+      className="carousel"
+    >
       <img src={photos[activePhoto]} alt="animal" />
-      <div className="carousel-smaller">
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
         {photos.map((photo, index) => (
-          // i should try to implement a interaction with the keyboard as well
-          // eslint-disable-next-line
-          <img
-            onClick={handlePhotoClick}
+          <button
             key={photo}
-            src={photo}
-            alt="animal thumbnail"
-            data-index={index}
+            type="button"
+            onClick={handlePhotoClick}
             className={index === activePhoto ? "active" : ""}
-          />
+            css={css`
+              border: none;
+              outline: none;
+              padding: 0;
+              border-radius: 100%;
+              background-color: transparent;
+            `}
+          >
+            <img
+              src={photo}
+              alt="animal thumbnail"
+              data-index={index}
+              css={css`
+                width: 100px;
+                height: 100px;
+                border: 4px solid ${index === activePhoto ? "#ad343e" : "red"};
+                opacity: ${index === activePhoto ? 0.6 : 1};
+                border-radius: 100%;
+              `}
+            />
+          </button>
         ))}
       </div>
     </div>

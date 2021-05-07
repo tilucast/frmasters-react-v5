@@ -137,6 +137,23 @@ header {
   margin: 5px 0px 20px 0px;
 }
 
+.details .adopt-button {
+  display: block;
+  color: white;
+  font-weight: bold;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.details .adopt-button:hover {
+  filter: brightness(150%);
+}
+
 .carousel {
   display: flex;
   justify-content: space-around;
@@ -150,7 +167,7 @@ header {
   max-height: 400px;
 }
 
-.carousel-smaller {
+/* .carousel-smaller {
   width: 50%;
 }
 
@@ -167,7 +184,7 @@ header {
 .carousel-smaller > img.active {
   border-color: #ad343e;
   opacity: 0.6;
-}
+} */
 
 .search-params label {
   display: block;
@@ -183,8 +200,7 @@ header {
 }
 
 .search-params button,
-#modal button,
-.details button {
+#modal button {
   background-color: #ad343e;
   padding: 5px 25px;
   color: white;
@@ -278,7 +294,6 @@ button:disabled:hover {
     border-radius: 9px;
     margin-bottom: 25px;
   }
-
   .info {
     width: 65%;
   }
@@ -322,8 +337,8 @@ button:disabled:hover {
     margin: 0 auto;
     float: none;
   }
-  .carousel-smaller > img {
+  /* .carousel-smaller > img {
     width: 60px;
     height: 60px;
-  }
+  } */
 }

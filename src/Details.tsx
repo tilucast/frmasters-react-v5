@@ -1,29 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
 import { navigate, RouteComponentProps } from "@reach/router";
-import pet from "@frontendmasters/pet";
+import pet, { Photo } from "@frontendmasters/pet";
 import Carousel from "./Carousel";
 import ThemeContext from "./ThemeContext";
 import Modal from "./Modal";
 
-interface Animal {
+export interface Animal {
+  id: string | number;
   url: string;
   name: string;
   type: string;
   location: string;
   description: string;
-  media: {
-    full: string;
-    large: string;
-    medium: string;
-    small: string;
-  }[];
+  media: Photo[];
   breed: string;
 }
 
-const Details = ({ id }: RouteComponentProps<{ id: number }>) => {
-  if (!id) return navigate("/");
+type RouteParams = { id: number };
+
+const Details: any = ({ id }: RouteComponentProps<RouteParams>) => {
+  // couldnt find an answer online, so ill leave it as any
 
   const [animal, setAnimal] = useState<Animal>({
+    id: "",
     url: "",
     name: "",
     breed: "",
@@ -38,10 +37,16 @@ const Details = ({ id }: RouteComponentProps<{ id: number }>) => {
   const [theme] = useContext(ThemeContext);
 
   useEffect(() => {
+    if (!id) {
+      navigate("/");
+      return;
+    }
+
     pet
       .animal(id)
       .then(({ animal }) => {
         setAnimal({
+          id: animal.id,
           url: animal.url,
           name: animal.name,
           location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
@@ -74,7 +79,11 @@ const Details = ({ id }: RouteComponentProps<{ id: number }>) => {
       <div className="">
         <h1>{name}</h1>
         <h2>{`${type} - ${breed} - ${location}`}</h2>
-        <button onClick={toggleModal} style={{ backgroundColor: theme }}>
+        <button
+          className="adopt-button"
+          onClick={toggleModal}
+          style={{ backgroundColor: theme }}
+        >
           Adopt {name}!
         </button>
         <p>{description}</p>
