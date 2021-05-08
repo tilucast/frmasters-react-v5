@@ -12,6 +12,7 @@ const useDropdown = (
     <label htmlFor={id}>
       {label}
       <select
+        data-testid={id}
         name={id}
         id={id}
         value={state}

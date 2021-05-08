@@ -9,7 +9,7 @@ import pet, { ANIMALS } from "@frontendmasters/pet";
 import useDropdown from "./useDropdown";
 import Results from "./Results";
 import ThemeContext from "./ThemeContext";
-import { Animal } from "./Details";
+import { Animal as ModifiedAnimal } from "./Details";
 import { RouteComponentProps } from "@reach/router";
 
 const SearchParams: FunctionComponent<RouteComponentProps> = () => {
@@ -17,33 +17,51 @@ const SearchParams: FunctionComponent<RouteComponentProps> = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
   const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
   const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
-  const [pets, setPets] = useState<Animal[]>([]);
+  const [pets, setPets] = useState<ModifiedAnimal[]>([]);
   const [theme, setTheme] = useContext(ThemeContext); //theme, and the updater
 
-  const requestPets = async (event: FormEvent) => {
+  const requestPets = /*async*/ (event: FormEvent) => {
     event.preventDefault();
 
     setTheme("darkcyan");
 
-    const { animals } = await pet.animals({
-      location,
-      breed,
-      type: animal,
-    });
-    const typedAnimals = animals.map((animal) => {
-      return {
-        id: animal.id,
-        url: animal.url,
-        name: animal.name,
-        location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
-        description: animal.description,
-        media: animal.photos,
-        breed: animal.breeds.primary,
-        type: animal.type,
-      };
+    pet.animals({ location, breed, type: animal }).then(({ animals }) => {
+      const typedAnimals = animals.map((animal) => {
+        return {
+          id: animal.id,
+          url: animal.url,
+          name: animal.name,
+          location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+          description: animal.description,
+          media: animal.photos,
+          breed: animal.breeds.primary,
+          type: animal.type,
+        };
+      });
+
+      setPets(typedAnimals || []);
     });
 
-    setPets(typedAnimals || []);
+    // const { animals } = await pet.animals({
+    //   location,
+    //   breed,
+    //   type: animal,
+    // });
+
+    // const typedAnimals = animals.map((animal) => {
+    //   return {
+    //     id: animal.id,
+    //     url: animal.url,
+    //     name: animal.name,
+    //     location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+    //     description: animal.description,
+    //     media: animal.photos,
+    //     breed: animal.breeds.primary,
+    //     type: animal.type,
+    //   };
+    // });
+
+    // setPets(typedAnimals || []);
   };
 
   useEffect(() => {
@@ -74,7 +92,7 @@ const SearchParams: FunctionComponent<RouteComponentProps> = () => {
         <button
           style={{ backgroundColor: theme }}
           type="submit"
-          disabled={!breed}
+          // disabled={!breed} / comment this line when running testes here. Uncommente it afterwards.
         >
           Submit
         </button>

@@ -4,7 +4,7 @@ import { Pet } from "./Pet";
 
 let Results: React.FC<{ pets: Animal[] }> = ({ pets }) => {
   return (
-    <div className="search">
+    <div data-testid="search-results" className="search">
       {!pets.length ? (
         <h1>No pets found</h1>
       ) : (
