@@ -11,12 +11,32 @@ import Results from "./Results";
 import ThemeContext from "./ThemeContext";
 import { Animal as ModifiedAnimal } from "./Details";
 import { RouteComponentProps } from "@reach/router";
+import {
+  selectAnimalById,
+  setAnimal as setStoreAnimal,
+  setBreeds as setBreedsStore,
+} from "./reducers/animalsSlice";
+import { useAppDispatch, useAppSelector } from "./reduxHooks";
 
 const SearchParams: FunctionComponent<RouteComponentProps> = () => {
+  const animalsState = useAppSelector((state) =>
+    selectAnimalById(state, "dog")
+  );
+
+  const dispatch = useAppDispatch();
+
   const [location, setLocation] = useState("Seattle, WA");
-  const [breeds, setBreeds] = useState<string[]>([]);
-  const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
-  const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
+  const [_, setBreeds] = useState<string[]>([]);
+  const [animal, AnimalDropdown] = useDropdown(
+    "Animal",
+    animalsState?.animal || "dog",
+    ANIMALS
+  );
+  const [breed, BreedDropdown, __] = useDropdown(
+    "Breed",
+    "",
+    animalsState?.entities.breeds || []
+  );
   const [pets, setPets] = useState<ModifiedAnimal[]>([]);
   const [theme, setTheme] = useContext(ThemeContext); //theme, and the updater
 
@@ -65,14 +85,16 @@ const SearchParams: FunctionComponent<RouteComponentProps> = () => {
   };
 
   useEffect(() => {
-    setBreeds([]);
-    setBreed("");
+    //setBreeds([]);
+    //setBreed("");
+    dispatch(setStoreAnimal(animal));
 
-    pet.breeds(animal).then(({ breeds }) => {
+    pet.breeds(animalsState?.animal || animal).then(({ breeds }) => {
       const breedsToString = breeds.map(({ name }) => name);
       setBreeds(breedsToString);
+      dispatch(setBreedsStore({ animal, breeds: breedsToString, id: animal }));
     }, console.error);
-  }, [animal, setBreed]);
+  }, [animal, dispatch, animalsState?.animal]);
 
   return (
     <div className="search-params">
@@ -92,7 +114,7 @@ const SearchParams: FunctionComponent<RouteComponentProps> = () => {
         <button
           style={{ backgroundColor: theme }}
           type="submit"
-          // disabled={!breed} / comment this line when running testes here. Uncommente it afterwards.
+          // disabled={!breed} / comment this line when running testes here. Uncomment it afterwards. or not.
         >
           Submit
         </button>

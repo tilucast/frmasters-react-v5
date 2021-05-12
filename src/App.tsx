@@ -4,6 +4,9 @@ import SearchParams from "./SearchParams";
 import { Router } from "@reach/router";
 import ThemeContext from "./ThemeContext";
 import Navbar from "./Navbar";
+import {} from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const Details = lazy(() => import("./Details"));
 
@@ -12,17 +15,19 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <ThemeContext.Provider value={themeHook}>
-        <div>
-          <Navbar />
-          <Suspense fallback={<h1>Loading ...</h1>}>
-            <Router>
-              <SearchParams path="/" />
-              <Details path="/details/:id" />
-            </Router>
-          </Suspense>
-        </div>
-      </ThemeContext.Provider>
+      <Provider store={store}>
+        <ThemeContext.Provider value={themeHook}>
+          <div>
+            <Navbar />
+            <Suspense fallback={<h1>Loading ...</h1>}>
+              <Router>
+                <SearchParams path="/" />
+                <Details path="/details/:id" />
+              </Router>
+            </Suspense>
+          </div>
+        </ThemeContext.Provider>
+      </Provider>
     </React.StrictMode>
   );
 };
