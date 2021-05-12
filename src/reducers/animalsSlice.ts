@@ -2,12 +2,9 @@ import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 interface State {
-  ids: string[];
   animal: string;
-  entities: {
-    animal: string;
-    breeds: string[];
-  };
+  breeds: string[];
+  id: string;
 }
 
 const animalsAdapter = createEntityAdapter<State>();
@@ -28,8 +25,9 @@ const animalsSlice = createSlice({
 
 export const { setAnimal, setBreeds } = animalsSlice.actions;
 
-export const { selectById: selectAnimalById } = animalsAdapter.getSelectors(
-  (state: RootState) => state.animals
-);
+export const {
+  selectById: selectAnimalById,
+  selectAll: selectAllAnimals,
+} = animalsAdapter.getSelectors((state: RootState) => state.animals);
 
 export default animalsSlice.reducer;

@@ -12,6 +12,7 @@ import ThemeContext from "./ThemeContext";
 import { Animal as ModifiedAnimal } from "./Details";
 import { RouteComponentProps } from "@reach/router";
 import {
+  selectAllAnimals,
   selectAnimalById,
   setAnimal as setStoreAnimal,
   setBreeds as setBreedsStore,
@@ -19,26 +20,29 @@ import {
 import { useAppDispatch, useAppSelector } from "./reduxHooks";
 
 const SearchParams: FunctionComponent<RouteComponentProps> = () => {
-  const animalsState = useAppSelector((state) =>
-    selectAnimalById(state, "dog")
-  );
+  const currentAnimalOnState = useAppSelector((state) => state.animals.animal);
+
+  const allAnimalsState = useAppSelector(selectAllAnimals);
 
   const dispatch = useAppDispatch();
 
   const [location, setLocation] = useState("Seattle, WA");
-  const [_, setBreeds] = useState<string[]>([]);
+  const [breeds, setBreeds] = useState<string[]>([]);
   const [animal, AnimalDropdown] = useDropdown(
     "Animal",
-    animalsState?.animal || "dog",
+    currentAnimalOnState || "dog",
     ANIMALS
+  );
+  const animalsState = useAppSelector((state) =>
+    selectAnimalById(state, animal)
   );
   const [breed, BreedDropdown, __] = useDropdown(
     "Breed",
     "",
-    animalsState?.entities.breeds || []
+    animalsState?.breeds || breeds
   );
   const [pets, setPets] = useState<ModifiedAnimal[]>([]);
-  const [theme, setTheme] = useContext(ThemeContext); //theme, and the updater
+  const [theme, setTheme] = useContext(ThemeContext);
 
   const requestPets = /*async*/ (event: FormEvent) => {
     event.preventDefault();
@@ -85,16 +89,20 @@ const SearchParams: FunctionComponent<RouteComponentProps> = () => {
   };
 
   useEffect(() => {
-    //setBreeds([]);
-    //setBreed("");
     dispatch(setStoreAnimal(animal));
 
-    pet.breeds(animalsState?.animal || animal).then(({ breeds }) => {
+    const findAnimal = allAnimalsState.find(
+      (animal) => animal.animal === animalsState?.animal
+    );
+
+    if (findAnimal) return;
+
+    pet.breeds(animal).then(({ breeds }) => {
       const breedsToString = breeds.map(({ name }) => name);
       setBreeds(breedsToString);
       dispatch(setBreedsStore({ animal, breeds: breedsToString, id: animal }));
     }, console.error);
-  }, [animal, dispatch, animalsState?.animal]);
+  }, [animal, dispatch, allAnimalsState, animalsState?.animal]);
 
   return (
     <div className="search-params">
